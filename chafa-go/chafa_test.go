@@ -159,3 +159,60 @@ func TestOptimizationFlags(t *testing.T) {
 		t.Error("Expected OptimizationSkipCells to not be set")
 	}
 }
+
+func TestCalcCanvasGeometry(t *testing.T) {
+	// Test basic calculation
+	width := 80
+	height := 25
+	CalcCanvasGeometry(800, 600, &width, &height, 0.5, false, false)
+	
+	if width <= 0 || height <= 0 {
+		t.Errorf("Invalid calculated geometry: %dx%d", width, height)
+	}
+	
+	// Test with zoom
+	width = 80
+	height = 25
+	CalcCanvasGeometry(40, 20, &width, &height, 0.5, true, false)
+	
+	if width <= 0 || height <= 0 {
+		t.Errorf("Invalid calculated geometry with zoom: %dx%d", width, height)
+	}
+	
+	// Test with stretch
+	width = 80
+	height = 25
+	CalcCanvasGeometry(800, 600, &width, &height, 0.5, false, true)
+	
+	if width != 80 || height != 25 {
+		t.Errorf("Stretch should use exact dimensions: got %dx%d, expected 80x25", width, height)
+	}
+	
+	// Test with unspecified dimensions
+	width = -1
+	height = -1
+	CalcCanvasGeometry(800, 600, &width, &height, 0.5, false, false)
+	
+	if width <= 0 || height <= 0 {
+		t.Errorf("Should calculate dimensions: got %dx%d", width, height)
+	}
+	
+	// Test with zero source dimensions
+	width = 80
+	height = 25
+	CalcCanvasGeometry(0, 600, &width, &height, 0.5, false, false)
+	
+	if width != 0 || height != 0 {
+		t.Errorf("Zero source dimension should result in zero output: got %dx%d", width, height)
+	}
+	
+	// Test aspect ratio preservation
+	width = -1
+	height = 100
+	CalcCanvasGeometry(200, 100, &width, &height, 0.5, false, false)
+	
+	// With 2:1 aspect ratio source and font ratio 0.5, width should be ~50
+	if width <= 0 {
+		t.Errorf("Width should be calculated: got %d", width)
+	}
+}

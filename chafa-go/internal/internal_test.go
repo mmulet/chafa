@@ -181,3 +181,84 @@ func TestBase64EncodeLong(t *testing.T) {
 		t.Errorf("Invalid base64 output length: %d", len(result))
 	}
 }
+
+func TestMathSquare(t *testing.T) {
+	if Square(5) != 25 {
+		t.Errorf("Square(5) = %d, expected 25", Square(5))
+	}
+	
+	if SquareFloat(2.5) != 6.25 {
+		t.Errorf("SquareFloat(2.5) = %f, expected 6.25", SquareFloat(2.5))
+	}
+}
+
+func TestRoundUpToMultipleOf(t *testing.T) {
+	tests := []struct {
+		value    int
+		multiple int
+		expected int
+	}{
+		{10, 8, 16},
+		{16, 8, 16},
+		{17, 8, 24},
+		{0, 8, 0},
+		{1, 1, 1},
+	}
+	
+	for _, tt := range tests {
+		result := RoundUpToMultipleOf(tt.value, tt.multiple)
+		if result != tt.expected {
+			t.Errorf("RoundUpToMultipleOf(%d, %d) = %d, expected %d",
+				tt.value, tt.multiple, result, tt.expected)
+		}
+	}
+}
+
+func TestMinMax(t *testing.T) {
+	if Min(5, 10) != 5 {
+		t.Error("Min(5, 10) should be 5")
+	}
+	
+	if Max(5, 10) != 10 {
+		t.Error("Max(5, 10) should be 10")
+	}
+}
+
+func TestClamp(t *testing.T) {
+	if Clamp(5, 0, 10) != 5 {
+		t.Error("Clamp(5, 0, 10) should be 5")
+	}
+	
+	if Clamp(-5, 0, 10) != 0 {
+		t.Error("Clamp(-5, 0, 10) should be 0")
+	}
+	
+	if Clamp(15, 0, 10) != 10 {
+		t.Error("Clamp(15, 0, 10) should be 10")
+	}
+	
+	if ClampFloat(5.5, 0.0, 10.0) != 5.5 {
+		t.Error("ClampFloat(5.5, 0.0, 10.0) should be 5.5")
+	}
+}
+
+func TestTuckAndAlign(t *testing.T) {
+	// Test stretch mode
+	ofsX, ofsY, w, h := TuckAndAlign(100, 100, 200, 200, 0, 0, 0)
+	if ofsX != 0 || ofsY != 0 || w != 200 || h != 200 {
+		t.Errorf("Stretch mode failed: got (%d,%d,%d,%d), expected (0,0,200,200)",
+			ofsX, ofsY, w, h)
+	}
+	
+	// Test fit mode with centering
+	ofsX, ofsY, w, h = TuckAndAlign(100, 100, 200, 200, 2, 2, 1)
+	if w != 200 || h != 200 {
+		t.Errorf("Fit mode size incorrect: got (%d,%d), expected (200,200)", w, h)
+	}
+	
+	// Test shrink to fit (should not scale up)
+	ofsX, ofsY, w, h = TuckAndAlign(50, 50, 200, 200, 2, 2, 2)
+	if w != 50 || h != 50 {
+		t.Errorf("ShrinkToFit should not scale up: got (%d,%d), expected (50,50)", w, h)
+	}
+}
