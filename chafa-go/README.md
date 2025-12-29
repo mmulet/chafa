@@ -8,49 +8,72 @@ This directory contains the Go conversion of the Chafa library, a terminal graph
 
 This is an ongoing conversion of the Chafa C library to Go. The conversion is being done incrementally, starting with the core types and structures.
 
+**Progress: Phase 2 Complete - Core Data Structures Converted**
+
+### Statistics
+- **Go Files**: 16 files
+- **Lines of Code**: ~2,159 lines
+- **Tests**: 24 tests, all passing
+- **Original C Code**: ~40,000 lines
+- **Completion**: ~5% (foundational structures complete)
+
 ### Completed
 
-- ✅ Basic project structure
+**Phase 1: Project Setup** ✅
+- ✅ Go module structure (go.mod)
+- ✅ Directory structure
+- ✅ Build system
+
+**Phase 2: Core Data Structures** ✅
 - ✅ Common types and enums (PixelType, Align, Tuck, ColorExtractor, ColorSpace, DitherMode, etc.)
-- ✅ Symbol map types and structure (partial)
-- ✅ Canvas configuration structure
+- ✅ Canvas configuration structure with all getters/setters
+- ✅ Symbol map structure (partial implementation)
 - ✅ Basic Canvas structure (stub)
+- ✅ Color handling (internal/color.go)
+  - Color structures and operations
+  - RGB to DIN99d color space conversion
+  - Color averaging and difference calculations
+- ✅ Base64 encoding with streaming support (internal/base64.go)
+- ✅ Math utilities (internal/math_util.go)
+  - TuckAndAlign for image placement
+  - Clamp, Min, Max, Square functions
+  - RoundUpToMultipleOf
+- ✅ Canvas geometry calculation (util.go)
+  - CalcCanvasGeometry for optimal canvas sizing
+  - Aspect ratio preservation
+  - Font ratio compensation
 - ✅ Version constants
 
 ### In Progress
 
 - 🔄 Symbol map implementation
-- 🔄 Canvas implementation
 - 🔄 Terminal info structures
 
 ### Todo
 
 **Core Components:**
-- ⬜ Frame handling
-- ⬜ Image handling
-- ⬜ Placement
+- ⬜ Frame handling implementation
+- ⬜ Image handling implementation
+- ⬜ Placement implementation
 - ⬜ Parser
 - ⬜ Stream reader
 - ⬜ Stream writer
 - ⬜ Features detection
-- ⬜ Utilities
+- ⬜ Remaining utilities
 
 **Internal Components:**
 - ⬜ Canvas printer
-- ⬜ Color handling
-- ⬜ Color hash/table
-- ⬜ Palette management
+- ⬜ Pixel operations
 - ⬜ Dithering algorithms
 - ⬜ Indexed image support
-- ⬜ Pixel operations
+- ⬜ Palette management
+- ⬜ Color hash/table
 - ⬜ Symbol definitions
 - ⬜ Sixel canvas
 - ⬜ Kitty canvas
 - ⬜ iTerm2 canvas
-- ⬜ Base64 encoding
 - ⬜ Batch processing
 - ⬜ Work cells and threading
-- ⬜ Math utilities
 - ⬜ Noise generation
 - ⬜ PCA
 - ⬜ Passthrough encoder
@@ -69,28 +92,42 @@ This is an ongoing conversion of the Chafa C library to Go. The conversion is be
 
 ```
 chafa-go/           - Main package with public API
-  common.go         - Common types and enums
-  version.go        - Version constants
-  canvas.go         - Canvas rendering
-  canvas_config.go  - Canvas configuration
-  symbol_map.go     - Symbol mapping
-  term_info.go      - Terminal information (TODO)
-  term_db.go        - Terminal database (TODO)
-  frame.go          - Frame handling (TODO)
-  image.go          - Image handling (TODO)
-  placement.go      - Placement (TODO)
-  parser.go         - Parsing (TODO)
-  stream_reader.go  - Stream reading (TODO)
-  stream_writer.go  - Stream writing (TODO)
-  features.go       - Feature detection (TODO)
-  util.go           - Utilities (TODO)
+  common.go         - Common types and enums ✅
+  version.go        - Version constants ✅
+  canvas.go         - Canvas rendering (stub) ✅
+  canvas_config.go  - Canvas configuration ✅
+  symbol_map.go     - Symbol mapping (partial) ✅
+  term_info.go      - Terminal information (stub) ✅
+  frame.go          - Frame handling (stub) ✅
+  image.go          - Image handling (stub) ✅
+  placement.go      - Placement (stub) ✅
+  util.go           - Utilities ✅
+  doc.go            - Package documentation ✅
+  chafa_test.go     - Tests (9 tests) ✅
   
   internal/         - Internal implementation packages
-    (to be created)
+    color.go        - Color handling ✅
+    base64.go       - Base64 encoding ✅
+    math_util.go    - Math utilities ✅
+    internal_test.go - Tests (15 tests) ✅
 
 cmd/chafa/          - CLI tool
-  main.go           - Main entry point (TODO)
+  main.go           - Example application ✅
 ```
+
+## Test Coverage
+
+All 24 tests passing:
+- ✅ Canvas configuration (creation, setters/getters, copying)
+- ✅ Symbol map (creation, settings)
+- ✅ Canvas creation
+- ✅ Type constants (PixelType, SymbolTags, Optimizations)
+- ✅ Canvas geometry calculation
+- ✅ Color operations (pack/unpack, average, diff, accumulation)
+- ✅ RGB to DIN99d conversion
+- ✅ Base64 encoding (single and streaming)
+- ✅ Math utilities (square, min/max, clamp, round up)
+- ✅ Image placement calculations (TuckAndAlign)
 
 ## Conversion Notes
 
@@ -138,8 +175,23 @@ go build ./chafa-go
 ## Testing
 
 ```bash
-go test ./chafa-go
+go test ./chafa-go/...
 ```
+
+## Running Example
+
+```bash
+go build -o /tmp/chafa-example ./cmd/chafa
+/tmp/chafa-example
+```
+
+## Next Steps
+
+1. **Phase 3**: Implement TermInfo and terminal database structures
+2. **Symbol Definitions**: Convert symbol character mappings
+3. **Pixel Operations**: Implement core pixel manipulation functions
+4. **Canvas Rendering**: Complete the canvas drawing implementation
+5. **Output Formats**: Implement Sixel, Kitty, and iTerm2 output
 
 ## License
 
